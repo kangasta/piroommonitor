@@ -1,3 +1,4 @@
+import json
 from time import sleep
 from datetime import datetime
 from argparse import ArgumentParser
@@ -13,7 +14,8 @@ class Sensors(object):
 	def __init__(self):
 		self.sensors = [Bmp180(), Si7021(), Tsl2561()]
 
-	def get_data(self):
+	@property
+	def text(self):
 		data = ""
 		for sensor in self.sensors:
 			data += str(sensor) + "\n"
@@ -38,6 +40,8 @@ sensors = Sensors()
 
 parser = ArgumentParser()
 parser.add_argument("remote_url", type=str, help="URL of the fdbk server to push the data to.")
+parser.add_argument("--interval", "-n", type=int, default=360, help="Data pushing interval in seconds.")
+parser.add_argument("--verbose", "-v", action="store_true", help="Be more verbose.")
 args = parser.parse_args()
 
 c = ClientConnection(args.remote_url)
@@ -69,8 +73,11 @@ print("Start pushing data")
 
 try:
 	while True:
-		c.addData("Room monitor", sensors.json)
-		sleep(5)
+		data = sensors.json
+		c.addData("Room monitor", data)
+		if args.verbose:
+			print("Push:\n" + json.dumps(data, indent=2, sort_keys=True))
+		sleep(args.interval)
 except KeyboardInterrupt:
 	pass
 
