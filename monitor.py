@@ -1,5 +1,6 @@
 from time import sleep
 from datetime import datetime
+from argparse import ArgumentParser
 
 from _bmp180 import Bmp180
 from pi_hcsr501 import HcSr501
@@ -34,7 +35,12 @@ class Sensors(object):
 print("Initializing")
 
 sensors = Sensors()
-c = ClientConnection("http://192.168.1.34:8080")
+
+parser = ArgumentParser()
+parser.add_argument("remote_url", type=str, help="URL of the fdbk server to push the data to.")
+args = parser.parse_args()
+
+c = ClientConnection(args.remote_url)
 
 try:
 	c.addTopic(
