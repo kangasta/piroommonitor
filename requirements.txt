@@ -1,0 +1,5 @@
+adafruit-bmp
+fdbk
+pi_si7021
+pi_hcsr501
+tsl2561
