@@ -52,7 +52,12 @@ try:
 		"IoT",
 		"Raspberry Pi pushing data from I2C sensor boards.",
 		["temperature", "humidity", "pressure", "luminosity"],
-		["celsius", "percent", "pascal", "lux"],
+		[
+			{"field": "temperature", "unit": "celsius"},
+			{"field": "humidity", "unit": "percent"},
+			{"field": "pressure", "unit": "pascal"},
+			{"field": "luminosity", "unit": "lux"}
+		],
 		[
 			{"field":"temperature", "method":"latest"},
 			{"field":"humidity", "method":"latest"},
