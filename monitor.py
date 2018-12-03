@@ -49,22 +49,22 @@ c = ClientConnection(args.remote_url)
 try:
 	c.addTopic(
 		"Room monitor",
-		"IoT",
-		"Raspberry Pi pushing data from I2C sensor boards.",
-		["temperature", "humidity", "pressure", "luminosity"],
-		[
+		type_str="IoT",
+		description="Raspberry Pi pushing data from I2C sensor boards.",
+		fields=["temperature", "humidity", "pressure", "luminosity"],
+		units=[
 			{"field": "temperature", "unit": "celsius"},
 			{"field": "humidity", "unit": "percent"},
 			{"field": "pressure", "unit": "pascal"},
 			{"field": "luminosity", "unit": "lux"}
 		],
-		[
+		summary=[
 			{"field":"temperature", "method":"latest"},
 			{"field":"humidity", "method":"latest"},
 			{"field":"pressure", "method":"latest"},
 			{"field":"luminosity", "method":"latest"}
 		],
-		[
+		visualizations=[
 			{"field":"temperature", "method":"line"},
 			{"field":"humidity", "method":"line"},
 			{"field":"pressure", "method":"line"},
