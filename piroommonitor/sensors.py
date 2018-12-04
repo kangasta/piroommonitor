@@ -1,6 +1,7 @@
-from _bmp180 import Bmp180
 from pi_si7021 import Si7021
-from _tsl2561 import Tsl2561
+
+from ._bmp180 import Bmp180
+from ._tsl2561 import Tsl2561
 
 class Sensors(object):
 	def __init__(self):

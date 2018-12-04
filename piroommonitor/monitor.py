@@ -3,7 +3,7 @@ from time import sleep
 from datetime import datetime
 from argparse import ArgumentParser
 
-from sensors import Sensors
+from piroommonitor import Sensors
 
 from fdbk import ClientConnection
 
@@ -66,27 +66,7 @@ class Monitor(object):
 				except Exception as e:
 					print("Received error: " + str(e))
 
-				if args.verbose:
+				if self.__verbose:
 					print("Push:\n" + json.dumps(data, indent=2, sort_keys=True))
 		except KeyboardInterrupt:
 			pass
-
-parser = ArgumentParser()
-parser.add_argument("remote_url", type=str, help="URL of the fdbk server to push the data to.")
-parser.add_argument("--interval", "-i", type=float, default=360.0, help="Data pushing interval in seconds.")
-parser.add_argument("--num-samples", "-n", type=int, default=60, help="Number of samples to average during the push interval")
-parser.add_argument("--verbose", "-v", action="store_true", help="Be more verbose.")
-args = parser.parse_args()
-
-print("Initializing")
-
-sensors = Sensors()
-monitor = Monitor(sensors, args.remote_url, args.interval, args.num_samples, args.verbose)
-
-print("Start pushing data")
-
-monitor.start()
-
-print("Stop pushing data")
-
-sensors.close()
