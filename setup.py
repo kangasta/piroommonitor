@@ -7,7 +7,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
 	name="piroommonitor",
-	version="0.1.0",
+	version="0.1.1",
 	author="Toni Kangas",
 	description="Room monitor for reading data from sensors and pushing it forward",
 	long_description=long_description,
@@ -16,7 +16,11 @@ setuptools.setup(
 	packages=setuptools.find_packages(),
 	scripts=["bin/piroommonitor"],
 	install_requires=[
-		"fdbk"
+		"fdbk",
+		"adafruit-bmp",
+		"fdbk",
+		"pi_si7021",
+		"tsl2561"
 	],
 	classifiers=(
 		"Programming Language :: Python :: 2.7",
