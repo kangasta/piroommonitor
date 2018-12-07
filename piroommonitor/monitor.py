@@ -21,7 +21,7 @@ class Monitor(object):
 			print("Creating topic 'Room monitor' to fdbk server at '" + self.__remote + "'")
 
 		try:
-			self.__client.addTopic(**self.__sensors.topic)
+			self.__topic_id = self.__client.addTopic(**self.__sensors.topic)
 		except Exception as e:
 			print("Received error: " + str(e))
 
@@ -39,7 +39,7 @@ class Monitor(object):
 					sleep(self.__interval/self.__num_samples)
 
 				try:
-					self.__client.addData("Room monitor", data)
+					self.__client.addData(self.__topic_id, data)
 				except Exception as e:
 					print("Received error: " + str(e))
 
