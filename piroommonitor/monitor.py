@@ -21,42 +21,19 @@ class Monitor(object):
 			print("Creating topic 'Room monitor' to fdbk server at '" + self.__remote + "'")
 
 		try:
-			self.__client.addTopic(
-				"Room monitor",
-				type_str="IoT",
-				description="Raspberry Pi pushing data from I2C sensor boards.",
-				fields=["temperature", "humidity", "pressure", "luminosity"],
-				units=[
-					{"field": "temperature", "unit": "celsius"},
-					{"field": "humidity", "unit": "percent"},
-					{"field": "pressure", "unit": "pascal"},
-				{"field": "luminosity", "unit": "lux"}
-				],
-				summary=[
-					{"field":"temperature", "method":"latest"},
-					{"field":"humidity", "method":"latest"},
-					{"field":"pressure", "method":"latest"},
-					{"field":"luminosity", "method":"latest"}
-				],
-				visualization=[
-					{"field":"temperature", "method":"line"},
-					{"field":"humidity", "method":"line"},
-					{"field":"pressure", "method":"line"},
-					{"field":"luminosity", "method":"line"}
-				]
-			)
+			self.__client.addTopic(**self.__sensors.topic)
 		except Exception as e:
 			print("Received error: " + str(e))
 
 	def start(self):
 		try:
 			while True:
-				data = self.__sensors.json
+				data = self.__sensors.data
 				for key in data:
 					data[key] = 0
 
 				for _ in range(self.__num_samples):
-					sample = self.__sensors.json
+					sample = self.__sensors.data
 					for key in sample:
 						data[key] += sample[key]/self.__num_samples
 					sleep(self.__interval/self.__num_samples)
