@@ -7,7 +7,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
 	name="piroommonitor",
-	version="0.1.1",
+	version="0.2.0",
 	author="Toni Kangas",
 	description="Room monitor for reading data from sensors and pushing it forward",
 	long_description=long_description,
