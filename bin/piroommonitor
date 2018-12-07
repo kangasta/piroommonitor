@@ -1,5 +1,7 @@
 from argparse import ArgumentParser
 from fdbk import Reporter
+import json
+from os.path import expanduser
 
 from piroommonitor import Sensors
 
@@ -9,13 +11,29 @@ parser.add_argument("db_parameters", nargs="+", type=str, help="Parameters for f
 parser.add_argument("--db-connection", type=str, default="ClientConnection", help="fdbk DB connection to use (default=ClientConnection)")
 parser.add_argument("--interval", "-i", type=float, default=360.0, help="Data pushing interval in seconds.")
 parser.add_argument("--num-samples", "-n", type=int, default=60, help="Number of samples to average during the push interval")
+parser.add_argument("--new-topic-id", action="store_true", help="Create new topic ID")
 parser.add_argument("--verbose", "-v", action="store_true", help="Be more verbose.")
 args = parser.parse_args()
 
 print("Initializing")
 
+try:
+	with open(expanduser("~/.piroommonitor.json")) as f:
+		topic_id = json.load(f)["topic_id"]
+except Exception:
+	print("No previous fdbk topic ID found")
+	topic_id = None
+if args.new_topic_id:
+	topic_id = None
+
 sensors = Sensors()
-reporter = Reporter(sensors, args.db_connection, args.db_parameters, interval=args.interval, num_samples=args.num_samples, verbose=args.verbose)
+reporter = Reporter(sensors, args.db_connection, args.db_parameters, topic_id=topic_id, interval=args.interval, num_samples=args.num_samples, verbose=args.verbose)
+
+try:
+	with open(expanduser("~/.piroommonitor.json"), "w") as f:
+		json.dump({"topic_id": reporter.topic_id}, f)
+except Exception as e:
+	print("Saving fdbk topic ID failed: " + str(e))
 
 print("Start pushing data")
 
