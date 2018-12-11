@@ -10,7 +10,7 @@ border_radius = 2;
 wall_thickness = 1.6;
 connector_wall_thickness = 0.5;
 
-part="top"; /* base or top */
+part="top_no_pir"; /* base or top or top_no_pir */
 
 module corner(height=15, holes=true, hole_only=false) {
     module inner() {
@@ -98,7 +98,7 @@ module case(height=15, holes=true) {
                 cube([a+border_radius,a+border_radius,wall_thickness]);
             }
         }
-        corners(height=height, holes=holes, holes_only=true);        
+        corners(height=height, holes=holes, holes_only=true);
     }
 }
 
@@ -118,14 +118,22 @@ if (part == "base") {
         pizero_connectors();
         pizero_header_clearance();
     }
-} else if (part == "top") {
+} else {
     difference() {
         case(height=5, holes=true);
-        translate([0,30]) {
-            cylinder(h=5, r=5, $fn=16);
-        }
-        translate([30,30]) {
-            cylinder(h=5, r=2.5, $fn=16);
+        arr=[];
+        if (part == "top_no_pir") {
+            for(i=[[5, 0, 35-5], [5/2, -35/2, 35-5], [5/2, 35/2, 35-5]]) {
+                translate([i[1], i[2]]) {
+                    cylinder(h=5, r=i[0], $fn=24);
+                }
+            }
+        } else if (part == "top"){
+            for(i=[[5, 0, 35-5], [5/2, 35-5/2, 0], /*[5/2, 35-23/2, 0],*/ [5/2, 35-23+5/2, 0], [23/2, 35-23/2, 35-23/2]]) {
+                translate([i[1], i[2]]) {
+                    cylinder(h=5, r=i[0], $fn=24);
+                }
+            }
         }
     }
 }
