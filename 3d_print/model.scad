@@ -1,16 +1,15 @@
-pizero_height = 5;
+pizero_height = 10;
 pizero_width = 65;
 pizero_length = 30;
-pizero_hole_r = 2.7/2;
+pizero_hole_r = 2.25/2;
 pi_header_width = 51;
 pi_header_length = 5;
 
 a = 80;
-border_radius = 2;
+border_radius = 2.5;
 wall_thickness = 1.6;
-connector_wall_thickness = 0.5;
 
-part="top_no_pir"; /* base or top or top_no_pir */
+part="base"; /* base or top or top_no_pir */
 
 module corner(height=15, holes=true, hole_only=false) {
     module inner() {
@@ -39,7 +38,9 @@ module corners(holes=true, holes_only=false) {
 }
 
 module pizero_connectors() {
-    translate([0,-(a/2)-wall_thickness/2+connector_wall_thickness,pizero_height/2+wall_thickness]) {
+    translate([0,-(a/2)-wall_thickness,pizero_height/2+wall_thickness]) {
+        cube([pizero_width,wall_thickness*2, pizero_height], center=true);
+        /*
         difference() {
             cube([pizero_width,wall_thickness, pizero_height], center=true);
             translate([0,-wall_thickness/2,pizero_height-wall_thickness]) {
@@ -49,15 +50,16 @@ module pizero_connectors() {
             }
         }
         for(i=[[13,12.4],[8,41.4],[8,54]]) {
-            translate([-pizero_width/2+i[1],0,-pizero_height/2+3/2]) {
-            cube([i[0], 10, 3],center=true);
+            translate([-pizero_width/2+i[1],0,-pizero_height/2+5/2]) {
+                cube([i[0], 10, 5],center=true);
+            }
         }
-        }
+        */
     }
 }
 
 module pizero_holder() {
-    translate([0, -(a/2)-wall_thickness+connector_wall_thickness+pizero_length/2, 0]) {
+    translate([0, -(a/2)-wall_thickness+pizero_length/2, 0]) {
         translate([0,0,wall_thickness/2]) {
             cube([pizero_width, pizero_length, wall_thickness], center=true);
         }
@@ -71,7 +73,7 @@ module pizero_holder() {
 }
 
 module pizero_header_clearance() {
-    translate([0,-(a/2)-wall_thickness+connector_wall_thickness+pizero_length-pi_header_length/2-1,wall_thickness]) {
+    translate([0,-(a/2)-wall_thickness+pizero_length-pi_header_length/2-1,wall_thickness]) {
         cube([pi_header_width, pi_header_length, 2], center=true);
     }
 }
@@ -112,7 +114,7 @@ pizero_header_clearance();
 if (part == "base") {
     difference() {
         union() {
-            case(height=15, holes=false);
+            case(height=8, holes=false);
             pizero_holder();
         }
         pizero_connectors();
@@ -120,7 +122,7 @@ if (part == "base") {
     }
 } else {
     difference() {
-        case(height=5, holes=true);
+        case(height=24, holes=true);
         arr=[];
         if (part == "top_no_pir") {
             for(i=[[5, 0, 35-5], [5/2, -35/2, 35-5], [5/2, 35/2, 35-5]]) {
@@ -131,7 +133,7 @@ if (part == "base") {
         } else if (part == "top"){
             for(i=[[5, 0, 35-5], [5/2, 35-5/2, 0], /*[5/2, 35-23/2, 0],*/ [5/2, 35-23+5/2, 0], [23/2, 35-23/2, 35-23/2]]) {
                 translate([i[1], i[2]]) {
-                    cylinder(h=5, r=i[0], $fn=24);
+                    cylinder(h=wall_thickness*4, r=i[0], $fn=24);
                 }
             }
         }
