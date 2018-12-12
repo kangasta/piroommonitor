@@ -20,6 +20,7 @@ setuptools.setup(
 		"adafruit-bmp",
 		"fdbk",
 		"pi_si7021",
+		"pigpio",
 		"tsl2561"
 	],
 	classifiers=(
