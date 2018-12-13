@@ -9,17 +9,17 @@ a = 80;
 border_radius = 2.5;
 wall_thickness = 1.6;
 
-part="base"; /* base or top or top_no_pir */
+part="top"; /* base or top or top_no_pir */
 
 module corner(height=15, holes=true, hole_only=false) {
-    module inner() {
+    module inner(r=1.25) {
         translate([0,0,wall_thickness]) {
-            cylinder(h=(height), r=1.25, $fn=16);
+            cylinder(h=(height), r=r, $fn=16);
         }
     }
     if(hole_only) {
         if (holes) {
-            inner();
+            inner(r=1.5);
         }
     } else {
         cylinder(h=height, r=border_radius, $fn=16);
@@ -125,13 +125,13 @@ if (part == "base") {
         case(height=24, holes=true);
         arr=[];
         if (part == "top_no_pir") {
-            for(i=[[5, 0, 35-5], [5/2, -35/2, 35-5], [5/2, 35/2, 35-5]]) {
+            for(i=[[5, 0, 35-5], [6/2, -35/2, 35-6], [6/2, 35/2, 35-6]]) {
                 translate([i[1], i[2]]) {
                     cylinder(h=5, r=i[0], $fn=24);
                 }
             }
         } else if (part == "top"){
-            for(i=[[5, 0, 35-5], [5/2, 35-5/2, 0], /*[5/2, 35-23/2, 0],*/ [5/2, 35-23+5/2, 0], [23/2, 35-23/2, 35-23/2]]) {
+            for(i=[[5, 0, 35-5], [6/2, 35-6/2, 0], /*[5/2, 35-23/2, 0],*/ [6/2, 35-25+6/2, 0], [25/2, 35-25/2, 35-25/2]]) {
                 translate([i[1], i[2]]) {
                     cylinder(h=wall_thickness*4, r=i[0], $fn=24);
                 }
