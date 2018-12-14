@@ -24,7 +24,7 @@ class frange(object):
 	def __str__(self):
 		return str(self.__min) + "-" + str(self.__max)
 
-logging.basicConfig(filename=expanduser("~/.piroommonitor.log"))
+logging.basicConfig(filename=expanduser("~/.piroommonitor.log"), filemode="w")
 logging.getLogger().setLevel(logging.INFO)
 
 parser = ArgumentParser()
@@ -50,7 +50,7 @@ try:
 	with open(expanduser("~/.piroommonitor.json")) as f:
 		topic_id = json.load(f)["topic_id"]
 except Exception:
-	logging.warning("No previous fdbk topic ID found")
+	logging.info("No previous fdbk topic ID found")
 	topic_id = None
 if args.new_topic_id:
 	topic_id = None
