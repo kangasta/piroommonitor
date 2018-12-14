@@ -9,7 +9,8 @@ a = 80;
 border_radius = 2.5;
 wall_thickness = 1.6;
 
-part="top"; /* base or top or top_no_pir */
+part="top"; /* base or top */
+pir=true;
 
 module corner(height=15, holes=true, hole_only=false) {
     module inner(r=1.25) {
@@ -40,21 +41,6 @@ module corners(holes=true, holes_only=false) {
 module pizero_connectors() {
     translate([0,-(a/2)-wall_thickness,pizero_height/2+wall_thickness]) {
         cube([pizero_width,wall_thickness*2, pizero_height], center=true);
-        /*
-        difference() {
-            cube([pizero_width,wall_thickness, pizero_height], center=true);
-            translate([0,-wall_thickness/2,pizero_height-wall_thickness]) {
-                rotate([45, 0, 0]) {
-                    cube([pizero_width,wall_thickness*2, wall_thickness*2], center=true);
-                }
-            }
-        }
-        for(i=[[13,12.4],[8,41.4],[8,54]]) {
-            translate([-pizero_width/2+i[1],0,-pizero_height/2+5/2]) {
-                cube([i[0], 10, 5],center=true);
-            }
-        }
-        */
     }
 }
 
@@ -104,17 +90,28 @@ module case(height=15, holes=true) {
     }
 }
 
-/*
-pizero_holder();
-pizero_connectors();
-pizero_header_clearance();
-*/
-
 module prm_text() {
-    translate([0,-30,3.5+0.2]) {
-        rotate([0,180,0]) {
+    size=7;
+    for(pos=[[[35,-15,3.5+0.2],[0,180,0]]/*,[[-12.5,-38,0], [0,180,270]]*/])
+    translate(pos[0]) {
+        rotate(pos[1]) {
             linear_extrude(height=10, center=true) {
-                text("piroommonitor", size=7, halign="center", valign="center");
+                for(i=[[0, "pi"],[1, "room"],[2, "monitor"]]) {
+                    separation=-size*1.2;
+                    for(j=[0.75, -2.75]) {
+                        translate([0,-separation*j]) {
+                            square([32.5, 1]);
+                        }
+                    }
+                    for(j=[0, 7.5, 15, 22.5, 30]) {
+                        translate([j+37.5,-23]) {
+                            square([2.5, 30.4]);
+                        }
+                    }
+                    translate([0, separation*i[0]]) {
+                        text(i[1], size=size, halign="left", valign="center");
+                    }
+                }
             }
         }
     }
@@ -137,24 +134,21 @@ if (part == "base") {
     difference() {
         union() {
             case(height=24, holes=true);
-            for (i=[[(led_r + 1)/2, 35-led_r/2, 0], [(led_r + 1)/2, 35-pir_r+led_r/2, 0]]) {
+            for (i=[[(led_r + 1)/2, 35-led_r/2, led_r/2], [(led_r + 1)/2, 35-pir_r+led_r/2, led_r/2]]) {
                 translate([i[1], i[2]]) {
                     cylinder(h=5, r=i[0], $fn=24);
                 }
             }
         }
-        //prm_text();
-        if (part == "top_no_pir") {
-            for(i=[[lux_r, 0, 35-lux_r], [led_r/2, 35-led_r/2, 0], [led_r/2, 35-pir_r+led_r/2, 0]]) {
-                translate([i[1], i[2]]) {
-                    cylinder(h=5, r=i[0], $fn=24);
-                }
+        prm_text();
+        for(i=[[lux_r, 0, 35-lux_r], [led_r/2, 35-led_r/2, led_r/2], [led_r/2, 35-pir_r+led_r/2, led_r/2]]) {
+            translate([i[1], i[2]]) {
+                cylinder(h=5, r=i[0], $fn=24);
             }
-        } else if (part == "top"){
-            for(i=[[lux_r, 0, 35-lux_r], [led_r/2, 35-led_r/2, 0], [led_r/2, 35-pir_r+led_r/2, 0], [pir_r/2, 35-pir_r/2, 35-pir_r/2]]) {
-                translate([i[1], i[2]]) {
-                    cylinder(h=20, r=i[0], $fn=24);
-                }
+        }
+        if (pir){
+            translate([35-pir_r/2, 35-pir_r/2]) {
+                cylinder(h=20, r=pir_r/2, $fn=24);
             }
         }
     }
