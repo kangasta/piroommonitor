@@ -3,6 +3,7 @@
 from argparse import ArgumentParser
 from fdbk import Reporter
 import json
+import logging
 from os.path import expanduser
 
 from piroommonitor import Sensors, RGBLed
@@ -23,6 +24,9 @@ class frange(object):
 	def __str__(self):
 		return str(self.__min) + "-" + str(self.__max)
 
+logging.basicConfig(filename=expanduser("~/.piroommonitor.log"))
+logging.getLogger().setLevel(logging.INFO)
+
 parser = ArgumentParser()
 
 parser.add_argument("db_parameters", nargs="+", type=str, help="Parameters for fdbk DB connection.")
@@ -37,7 +41,7 @@ args = parser.parse_args()
 
 __leds = [RGBLed(*pins) for pins in args.led_pins]
 
-print("Initializing")
+logging.info("Initializing")
 
 if __leds:
 	__leds[0](0, 0, 255*args.led_brightness)
@@ -46,7 +50,7 @@ try:
 	with open(expanduser("~/.piroommonitor.json")) as f:
 		topic_id = json.load(f)["topic_id"]
 except Exception:
-	print("No previous fdbk topic ID found")
+	logging.warning("No previous fdbk topic ID found")
 	topic_id = None
 if args.new_topic_id:
 	topic_id = None
@@ -58,9 +62,9 @@ try:
 	with open(expanduser("~/.piroommonitor.json"), "w") as f:
 		json.dump({"topic_id": reporter.topic_id}, f)
 except Exception as e:
-	print("Saving fdbk topic ID failed: " + str(e))
+	logging.warning("Saving fdbk topic ID failed: " + str(e))
 
-print("Start pushing data")
+logging.info("Start pushing data")
 
 if __leds:
 	__leds[0](0, 255*args.led_brightness, 0)
@@ -70,6 +74,6 @@ reporter.start()
 if __leds:
 	__leds[0](0, 0, 0)
 
-print("Stop pushing data")
+logging.info("Stop pushing data")
 
 sensors.close()
