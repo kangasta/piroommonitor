@@ -19,7 +19,7 @@ module corner(height=15, holes=true, hole_only=false) {
     }
     if(hole_only) {
         if (holes) {
-            inner(r=1.5);
+            inner(r=1.75);
         }
     } else {
         cylinder(h=height, r=border_radius, $fn=16);
@@ -110,7 +110,16 @@ pizero_connectors();
 pizero_header_clearance();
 */
 
-///*
+module prm_text() {
+    translate([0,-30,3.5+0.2]) {
+        rotate([0,180,0]) {
+            linear_extrude(height=10, center=true) {
+                text("piroommonitor", size=7, halign="center", valign="center");
+            }
+        }
+    }
+}
+
 if (part == "base") {
     difference() {
         union() {
@@ -121,22 +130,32 @@ if (part == "base") {
         pizero_header_clearance();
     }
 } else {
+    arr=[];
+    led_r = 5.5;
+    lux_r = 5;
+    pir_r = 24;
     difference() {
-        case(height=24, holes=true);
-        arr=[];
+        union() {
+            case(height=24, holes=true);
+            for (i=[[(led_r + 1)/2, 35-led_r/2, 0], [(led_r + 1)/2, 35-pir_r+led_r/2, 0]]) {
+                translate([i[1], i[2]]) {
+                    cylinder(h=5, r=i[0], $fn=24);
+                }
+            }
+        }
+        //prm_text();
         if (part == "top_no_pir") {
-            for(i=[[5, 0, 35-5], [6/2, -35/2, 35-6], [6/2, 35/2, 35-6]]) {
+            for(i=[[lux_r, 0, 35-lux_r], [led_r/2, 35-led_r/2, 0], [led_r/2, 35-pir_r+led_r/2, 0]]) {
                 translate([i[1], i[2]]) {
                     cylinder(h=5, r=i[0], $fn=24);
                 }
             }
         } else if (part == "top"){
-            for(i=[[5, 0, 35-5], [6/2, 35-6/2, 0], /*[5/2, 35-23/2, 0],*/ [6/2, 35-25+6/2, 0], [25/2, 35-25/2, 35-25/2]]) {
+            for(i=[[lux_r, 0, 35-lux_r], [led_r/2, 35-led_r/2, 0], [led_r/2, 35-pir_r+led_r/2, 0], [pir_r/2, 35-pir_r/2, 35-pir_r/2]]) {
                 translate([i[1], i[2]]) {
-                    cylinder(h=wall_thickness*4, r=i[0], $fn=24);
+                    cylinder(h=20, r=i[0], $fn=24);
                 }
             }
         }
     }
 }
-//*/
