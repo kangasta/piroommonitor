@@ -18,7 +18,7 @@ setuptools.setup(
 	install_requires=[
 		"fdbk",
 		"adafruit-bmp",
-		"fdbk",
+		"fdbk>=0.7.1",
 		"pi_si7021",
 		"pigpio",
 		"tsl2561"
