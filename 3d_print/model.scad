@@ -11,6 +11,8 @@ wall_thickness = 1.6;
 
 part="top"; /* base or top */
 pir=true;
+mq135=true;
+ventilation=true;
 
 module corner(height=15, holes=true, hole_only=false) {
     module inner(r=1.25) {
@@ -117,6 +119,14 @@ module prm_text() {
     }
 }
 
+module top_ventilation(base=8, h=16, w=16) {
+    for(i=[-1, 0, 1]) {
+        translate([i*w*1.5, 40, 8+h/2]) {
+            cube([w, 16, h], center=true);
+        }
+    }
+}
+
 if (part == "base") {
     difference() {
         union() {
@@ -141,6 +151,9 @@ if (part == "base") {
             }
         }
         prm_text();
+        if (ventilation) {
+            top_ventilation();
+        }
         for(i=[[lux_r, 0, 35-lux_r], [led_r/2, 35-led_r/2, led_r/2], [led_r/2, 35-pir_r+led_r/2, led_r/2]]) {
             translate([i[1], i[2]]) {
                 cylinder(h=5, r=i[0], $fn=24);
