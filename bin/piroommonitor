@@ -7,6 +7,22 @@ from os.path import expanduser
 
 from piroommonitor import Sensors, RGBLed
 
+class frange(object):
+	def __init__(self, min, max):
+		self.__min = float(min)
+		self.__max = float(max)
+
+	def __eq__(self, other):
+		return other >= self.__min and other <= self.__max
+
+	def __getitem__(self, i):
+		if i > 0:
+			raise IndexError()
+		return self
+
+	def __str__(self):
+		return str(self.__min) + "-" + str(self.__max)
+
 parser = ArgumentParser()
 
 parser.add_argument("db_parameters", nargs="+", type=str, help="Parameters for fdbk DB connection.")
@@ -15,6 +31,7 @@ parser.add_argument("--interval", "-i", type=float, default=360.0, help="Data pu
 parser.add_argument("--num-samples", "-n", type=int, default=60, help="Number of samples to average during the push interval")
 parser.add_argument("--new-topic-id", action="store_true", help="Create new topic ID")
 parser.add_argument("--led-pins", "-l", action="append", default=[], type=int, nargs=3, metavar=("R","G","B"), help="LED Pin numbers for R, G, and B")
+parser.add_argument("--led-brightness", "-b", type=float, default=0.5, choices=frange(0,1), help="Led brigthness multiplier")
 parser.add_argument("--verbose", "-v", action="store_true", help="Be more verbose.")
 args = parser.parse_args()
 
@@ -23,7 +40,7 @@ __leds = [RGBLed(*pins) for pins in args.led_pins]
 print("Initializing")
 
 if __leds:
-	__leds[0](0, 0, 255)
+	__leds[0](0, 0, 255*args.led_brightness)
 
 try:
 	with open(expanduser("~/.piroommonitor.json")) as f:
@@ -46,7 +63,7 @@ except Exception as e:
 print("Start pushing data")
 
 if __leds:
-	__leds[0](0, 255, 0)
+	__leds[0](0, 255*args.led_brightness, 0)
 
 reporter.start()
 
