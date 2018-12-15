@@ -6,23 +6,7 @@ import json
 import logging
 from os.path import expanduser
 
-from piroommonitor import Sensors, RGBLed
-
-class frange(object):
-	def __init__(self, min, max):
-		self.__min = float(min)
-		self.__max = float(max)
-
-	def __eq__(self, other):
-		return other >= self.__min and other <= self.__max
-
-	def __getitem__(self, i):
-		if i > 0:
-			raise IndexError()
-		return self
-
-	def __str__(self):
-		return str(self.__min) + "-" + str(self.__max)
+from piroommonitor import Sensors, RGBLed, FRange
 
 logging.basicConfig(filename=expanduser("~/.piroommonitor.log"), filemode="w")
 logging.getLogger().setLevel(logging.INFO)
@@ -35,16 +19,16 @@ parser.add_argument("--interval", "-i", type=float, default=360.0, help="Data pu
 parser.add_argument("--num-samples", "-n", type=int, default=60, help="Number of samples to average during the push interval")
 parser.add_argument("--new-topic-id", action="store_true", help="Create new topic ID")
 parser.add_argument("--led-pins", "-l", action="append", default=[], type=int, nargs=3, metavar=("R","G","B"), help="LED Pin numbers for R, G, and B")
-parser.add_argument("--led-brightness", "-b", type=float, default=0.5, choices=frange(0,1), help="Led brigthness multiplier")
+parser.add_argument("--led-brightness", "-b", type=float, default=0.5, choices=FRange(0,1), help="Led brigthness multiplier")
 parser.add_argument("--verbose", "-v", action="store_true", help="Be more verbose.")
 args = parser.parse_args()
 
-__leds = [RGBLed(*pins) for pins in args.led_pins]
+__leds = [RGBLed(*pins, args.led_brightness) for pins in args.led_pins]
 
 logging.info("Initializing")
 
 if __leds:
-	__leds[0](0, 0, 255*args.led_brightness)
+	__leds[0](0, 0, 255)
 
 try:
 	with open(expanduser("~/.piroommonitor.json")) as f:
@@ -67,7 +51,7 @@ except Exception as e:
 logging.info("Start pushing data")
 
 if __leds:
-	__leds[0](0, 255*args.led_brightness, 0)
+	__leds[0](0, 255, 0)
 
 reporter.start()
 
