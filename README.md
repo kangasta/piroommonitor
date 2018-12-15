@@ -16,3 +16,19 @@ See scripts help by running:
 ```bash
 piroommonitor --help
 ```
+
+## Testing
+
+Run unit tests with commands:
+
+```bash
+python3 -m unittest discover -s piroommonitor/tst/
+```
+
+Get test coverage with commands:
+```bash
+cd pi_si7021
+
+coverage run -m unittest discover -s piroommonitor/tst/
+coverage report -m
+```
