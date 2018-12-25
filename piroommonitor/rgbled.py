@@ -1,5 +1,4 @@
 import pigpio
-#from time import sleep
 
 class FRange(object):
 	def __init__(self, _min, _max):

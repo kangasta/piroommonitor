@@ -1,4 +1,4 @@
 name = "piroommonitor"
 
-from .sensors import Sensors
 from .rgbled import RGBLed, FRange
+from .i2c_sensors import I2CSensors

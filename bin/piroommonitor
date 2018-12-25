@@ -6,7 +6,7 @@ import json
 import logging
 from os.path import expanduser
 
-from piroommonitor import Sensors, RGBLed, FRange
+from piroommonitor import I2CSensors, RGBLed, FRange
 
 logging.basicConfig(filename=expanduser("~/.piroommonitor.log"), filemode="w")
 logging.getLogger().setLevel(logging.INFO)
@@ -39,8 +39,15 @@ except Exception:
 if args.new_topic_id:
 	topic_id = None
 
-sensors = Sensors()
-reporter = Reporter(sensors, args.db_connection, args.db_parameters, topic_id=topic_id, interval=args.interval, num_samples=args.num_samples, verbose=args.verbose)
+sensors = I2CSensors()
+reporter = Reporter(sensors,
+	args.db_connection,
+	args.db_parameters,
+	topic_id=topic_id,
+	interval=args.interval,
+	num_samples=args.num_samples,
+	verbose=args.verbose
+)
 
 try:
 	with open(expanduser("~/.piroommonitor.json"), "w") as f:

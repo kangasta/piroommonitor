@@ -3,7 +3,7 @@ from pi_si7021 import Si7021
 from ._bmp180 import Bmp180
 from ._tsl2561 import Tsl2561
 
-class Sensors(object):
+class I2CSensors(object):
 	def __init__(self):
 		self.sensors = [Bmp180(), Si7021(), Tsl2561()]
 
