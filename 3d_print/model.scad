@@ -9,7 +9,7 @@ a = 80;
 border_radius = 2.5;
 wall_thickness = 1.6;
 
-part="top"; /* base or top */
+part="base"; /* base or top */
 pir=true;
 mq135=true;
 ventilation=true;
@@ -140,7 +140,8 @@ if (part == "base") {
     arr=[];
     led_r = 5.5;
     lux_r = 5;
-    pir_r = 24;
+    pir_r = 23.5;
+    mq135_r = 20;
     difference() {
         union() {
             case(height=24, holes=true);
@@ -162,6 +163,11 @@ if (part == "base") {
         if (pir){
             translate([35-pir_r/2, 35-pir_r/2]) {
                 cylinder(h=20, r=pir_r/2, $fn=24);
+            }
+        }
+        if (mq135){
+            translate([-35+mq135_r/2, 35-mq135_r/2]) {
+                cylinder(h=20, r=mq135_r/2, $fn=24);
             }
         }
     }
