@@ -11,6 +11,11 @@ from piroommonitor import I2CSensors, RGBLed, FRange
 logging.basicConfig(filename=expanduser("~/.piroommonitor.log"), filemode="w")
 logging.getLogger().setLevel(logging.INFO)
 
+__default_config = {
+	'topic_id': None,
+	'motion_topic_id': None
+}
+
 parser = ArgumentParser()
 
 parser.add_argument("db_parameters", nargs="+", type=str, help="Parameters for fdbk DB connection.")
@@ -32,18 +37,19 @@ if __leds:
 
 try:
 	with open(expanduser("~/.piroommonitor.json")) as f:
-		topic_id = json.load(f)["topic_id"]
+		saved_config = json.load(f)["topic_id"]
 except Exception:
 	logging.info("No previous fdbk topic ID found")
-	topic_id = None
+	saved_config = __default_config
 if args.new_topic_id:
-	topic_id = None
+	saved_config = __default_config
 
 sensors = I2CSensors()
-reporter = Reporter(sensors,
+reporter = Reporter(
+	sensors,
 	args.db_connection,
 	args.db_parameters,
-	topic_id=topic_id,
+	topic_id=saved_config['topic_id'],
 	interval=args.interval,
 	num_samples=args.num_samples,
 	verbose=args.verbose
@@ -51,7 +57,10 @@ reporter = Reporter(sensors,
 
 try:
 	with open(expanduser("~/.piroommonitor.json"), "w") as f:
-		json.dump({"topic_id": reporter.topic_id}, f)
+		json.dump({
+			"topic_id": reporter.topic_id,
+			'motion_topic_id': None
+		}, f)
 except Exception as e:
 	logging.warning("Saving fdbk topic ID failed: " + str(e))
 
