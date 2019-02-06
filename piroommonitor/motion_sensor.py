@@ -42,4 +42,5 @@ class MotionSensor(object):
 			elif falling_cb is not None:
 				falling_cb()
 
+		__edge_callback(self.__pin)
 		GPIO.add_event_detect(self.__pin, edge=GPIO.BOTH, callback=__edge_callback)
