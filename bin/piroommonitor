@@ -6,7 +6,7 @@ import json
 import logging
 from os.path import expanduser
 
-from piroommonitor import I2CSensors, RGBLed, FRange
+from piroommonitor import I2CSensors, MotionSensor, RGBLed, FRange
 
 logging.basicConfig(filename=expanduser("~/.piroommonitor.log"), filemode="w")
 logging.getLogger().setLevel(logging.INFO)
@@ -24,6 +24,7 @@ parser.add_argument("--interval", "-i", type=float, default=360.0, help="Data pu
 parser.add_argument("--num-samples", "-n", type=int, default=60, help="Number of samples to average during the push interval")
 parser.add_argument("--new-topic-id", action="store_true", help="Create new topic ID")
 parser.add_argument("--led-pins", "-l", action="append", default=[], type=int, nargs=3, metavar=("R","G","B"), help="LED Pin numbers for R, G, and B")
+parser.add_argument("--motion-sensor-pin", "-m", type=int, help="Pin number for motion sensor out")
 parser.add_argument("--led-brightness", "-b", type=float, default=0.5, choices=FRange(0,1), help="Led brigthness multiplier")
 parser.add_argument("--verbose", "-v", action="store_true", help="Be more verbose.")
 args = parser.parse_args()
@@ -44,6 +45,16 @@ except Exception:
 if args.new_topic_id:
 	saved_config = __default_config
 
+if args.motion_sensor_pin is not None:
+	motion_sensor = MotionSensor(args.motion_sensor_pin)
+	motion_reporter = Reporter(
+		motion_sensor,
+		args.db_connection,
+		args.db_parameters,
+		topic_id=saved_config['motion_topic_id'],
+		verbose=args.verbose
+	)
+
 sensors = I2CSensors()
 reporter = Reporter(
 	sensors,
@@ -59,7 +70,7 @@ try:
 	with open(expanduser("~/.piroommonitor.json"), "w") as f:
 		json.dump({
 			"topic_id": reporter.topic_id,
-			'motion_topic_id': None
+			'motion_topic_id': motion_reporter.topic_id
 		}, f)
 except Exception as e:
 	logging.warning("Saving fdbk topic ID failed: " + str(e))
@@ -68,6 +79,9 @@ logging.info("Start pushing data")
 
 if __leds:
 	__leds[0](0, 255, 0)
+
+if args.motion_sensor_pin is not None:
+	motion_sensor.start(motion_reporter)
 
 reporter.start()
 

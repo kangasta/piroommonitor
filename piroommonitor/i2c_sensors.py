@@ -17,9 +17,9 @@ class I2CSensors(object):
 	@property
 	def topic(self):
 		return {
-			"name": "Room monitor",
-			"type_str": "IoT",
-			"description": "Raspberry Pi pushing data from I2C sensor boards.",
+			"name": "Pi Room Monitor",
+			"type_str": "piroommonitor",
+			"description": "Raspberry Pi pushing indoor weather data.",
 			"fields": ["temperature", "humidity", "pressure", "luminosity"],
 			"units": [
 				{"field": "temperature", "unit": "celsius"},

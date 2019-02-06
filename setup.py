@@ -16,12 +16,12 @@ setuptools.setup(
 	packages=setuptools.find_packages(),
 	scripts=["bin/piroommonitor"],
 	install_requires=[
-		"fdbk",
 		"adafruit-bmp",
-		"fdbk>=0.7.1",
+		"fdbk>=0.7.2",
 		"pi_si7021",
 		"pigpio",
-		"tsl2561"
+		"tsl2561",
+		"RPi.GPIO"
 	],
 	classifiers=(
 		"Programming Language :: Python :: 2.7",
