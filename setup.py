@@ -17,7 +17,7 @@ setuptools.setup(
 	scripts=["bin/piroommonitor"],
 	install_requires=[
 		"adafruit-bmp",
-		"fdbk>=0.7.2",
+		"fdbk>=0.8.0",
 		"pi_si7021",
 		"pigpio",
 		"tsl2561",

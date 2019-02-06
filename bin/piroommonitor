@@ -34,7 +34,8 @@ __leds = [RGBLed(*pins, args.led_brightness) for pins in args.led_pins]
 logging.info("Initializing")
 
 if __leds:
-	__leds[0](0, 0, 255)
+	for led in __leds:
+		led(0, 0, 255)
 
 try:
 	with open(expanduser("~/.piroommonitor.json")) as f:
@@ -78,15 +79,25 @@ except Exception as e:
 logging.info("Start pushing data")
 
 if __leds:
-	__leds[0](0, 255, 0)
+	for led in __leds:
+		led(0, 255, 0)
+
+def led_green():
+	if len(__leds) > 1:
+		__leds[1](0, 255, 0)
+
+def led_red():
+	if len(__leds) > 1:
+		__leds[1](255, 0, 0)
 
 if args.motion_sensor_pin is not None:
-	motion_sensor.start(motion_reporter)
+	motion_sensor.start(motion_reporter, led_red, led_green)
 
 reporter.start()
 
 if __leds:
-	__leds[0](0, 0, 0)
+	for led in __leds:
+		led(0, 255, 0)
 
 logging.info("Stop pushing data")
 

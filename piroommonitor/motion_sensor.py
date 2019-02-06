@@ -18,7 +18,7 @@ class MotionSensor(object):
 				{"field": "motion", "unit": "binary"}
 			],
 			"summary": [
-				{"field":"motion", "method":"latest"}
+				{"field":"motion", "method":"last_truthy"}
 			],
 			"visualization": [
 				{"field":"motion", "method":"line"}
@@ -31,10 +31,15 @@ class MotionSensor(object):
 			"motion": GPIO.input(self.__pin)
 		}
 
-	def start(self, reporter):
+	def start(self, reporter, rising_cb=None, falling_cb=None):
 		self.__reporter = reporter
 
 		def __edge_callback(pin):
-			self.__reporter.push(self.data)
+			data = self.data
+			self.__reporter.push(data)
+			if data["motion"] and rising_cb is not None:
+				rising_cb()
+			elif falling_cb is not None:
+				falling_cb()
 
 		GPIO.add_event_detect(self.__pin, edge=GPIO.BOTH, callback=__edge_callback)
