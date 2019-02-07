@@ -39,7 +39,7 @@ if __leds:
 
 try:
 	with open(expanduser("~/.piroommonitor.json")) as f:
-		saved_config = json.load(f)["topic_id"]
+		saved_config = json.load(f)
 except Exception:
 	logging.info("No previous fdbk topic ID found")
 	saved_config = __default_config

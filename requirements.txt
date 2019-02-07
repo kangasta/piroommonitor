@@ -1,6 +1,6 @@
-fdbk
+Adafruit-Blinka
 adafruit-bmp
-pi_si7021
-pi_hcsr501
-tsl2561
+adafruit-circuitpython-si7021
+adafruit-circuitpython-tsl2561
+fdbk
 RPi.GPIO

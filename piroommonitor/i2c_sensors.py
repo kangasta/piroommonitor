@@ -1,6 +1,5 @@
-from pi_si7021 import Si7021
-
 from ._bmp180 import Bmp180
+from ._si7021 import Si7021
 from ._tsl2561 import Tsl2561
 
 class I2CSensors(object):
@@ -47,11 +46,8 @@ class I2CSensors(object):
 			"temperature": self.sensors[1].temperature,
 			"humidity": self.sensors[1].relative_humidity,
 			"pressure": self.sensors[0].pressure,
-			"luminosity": self.sensors[2].luminosity,
+			"luminosity": self.sensors[2].lux,
 		}
-
-	def close(self):
-		self.sensors[1].close()
 
 if __name__ == "__main__":
 	sensors = Sensors()

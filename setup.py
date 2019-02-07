@@ -16,11 +16,12 @@ setuptools.setup(
 	packages=setuptools.find_packages(),
 	scripts=["bin/piroommonitor"],
 	install_requires=[
+		"Adafruit-Blinka",
 		"adafruit-bmp",
+		"adafruit-circuitpython-si7021",
+		"adafruit-circuitpython-tsl2561",
 		"fdbk>=0.8.0",
-		"pi_si7021",
 		"pigpio",
-		"tsl2561",
 		"RPi.GPIO"
 	],
 	classifiers=(
