@@ -17,15 +17,20 @@ See scripts help by running:
 piroommonitor --help
 ```
 
-### Getting started
+### Getting started on Raspberry Pi Zero
 
 ```bash
-# TODO add container build commands
+git clone --depth 1 https://github.com/kangasta/fdbk-webapp.git;
+pushd fdbk-webapp/docker-build/;
+	sudo docker build -f Dockerfile-RPiZero -t fdbk .;
+popd;
 
-docker run -dp 8080:8080 fdbk
+docker run -dp 8080:8080 fdbk;
 
-piroommonitor http://localhost:8080 -v -l 19 20 21 -l 22 23 24 -b 0.05 -m 4 --new-topic-id
+piroommonitor http://localhost:8080 -v -l 19 20 21 -l 22 23 24 -b 0.05 -m 4 --new-topic-id;
 ```
+
+To automatically start fdbk (without persistent data storage) and piroommonitor after boot, add following cron job (with `crontab -e`):
 
 ```cron
 @reboot /usr/bin/docker run -dp 8080:8080 fdbk && /usr/local/bin/piroommonitor http://localhost:8080 -v -l 19 20 21 -l 22 23 24 -b 0.05 -m 4 --new-topic-id
