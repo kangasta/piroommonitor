@@ -7,7 +7,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
 	name="piroommonitor",
-	version="0.3.1",
+	version="0.4.0",
 	author="Toni Kangas",
 	description="Room monitor for reading data from sensors and pushing it forward",
 	long_description=long_description,
@@ -25,7 +25,6 @@ setuptools.setup(
 		"RPi.GPIO"
 	],
 	classifiers=(
-		"Programming Language :: Python :: 2.7",
 		"Programming Language :: Python :: 3",
 		"License :: OSI Approved :: MIT License",
 		"Operating System :: OS Independent",
