@@ -20,7 +20,7 @@ setuptools.setup(
 		"adafruit-bmp",
 		"adafruit-circuitpython-si7021",
 		"adafruit-circuitpython-tsl2561",
-		"fdbk>=0.8.0",
+		"fdbk>=0.8.3",
 		"pigpio",
 		"RPi.GPIO"
 	],

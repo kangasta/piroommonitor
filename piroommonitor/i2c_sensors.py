@@ -50,6 +50,5 @@ class I2CSensors(object):
 		}
 
 if __name__ == "__main__":
-	sensors = Sensors()
+	sensors = I2CSensors()
 	print(sensors.text)
-	sensors.close()

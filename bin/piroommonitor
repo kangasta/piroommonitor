@@ -100,5 +100,3 @@ if __leds:
 		led(0, 255, 0)
 
 logging.info("Stop pushing data")
-
-sensors.close()
