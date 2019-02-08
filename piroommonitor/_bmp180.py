@@ -4,6 +4,10 @@ from Adafruit_BMP.BMP085 import BMP085
 
 class Bmp180(BMP085):
 	@property
+	def address(self):
+		return 0x77
+
+	@property
 	def temperature(self):
 		return self.read_temperature()
 

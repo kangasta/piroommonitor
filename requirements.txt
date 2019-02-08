@@ -4,3 +4,4 @@ adafruit-circuitpython-si7021
 adafruit-circuitpython-tsl2561
 fdbk
 RPi.GPIO
+pigpio

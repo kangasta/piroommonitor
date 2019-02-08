@@ -6,6 +6,10 @@ class Si7021(SI7021):
 	def __init__(self):
 		super().__init__(get_busio_i2c())
 
+	@property
+	def address(self):
+		return 0x40
+
 	def __str__(self):
 		ret = "Temperature: " + str(self.temperature) + " C\n"
 		ret = "Humidity: " + str(self.relative_humidity) + " %"
