@@ -55,6 +55,8 @@ if args.motion_sensor_pin is not None:
 		topic_id=saved_config['motion_topic_id'],
 		verbose=args.verbose
 	)
+else:
+	motion_reporter = None
 
 sensors = I2CSensors()
 reporter = Reporter(
@@ -71,7 +73,7 @@ try:
 	with open(expanduser("~/.piroommonitor.json"), "w") as f:
 		json.dump({
 			"topic_id": reporter.topic_id,
-			'motion_topic_id': motion_reporter.topic_id
+			'motion_topic_id': motion_reporter.topic_id if motion_reporter is not None else None
 		}, f)
 except Exception as e:
 	logging.warning("Saving fdbk topic ID failed: " + str(e))
