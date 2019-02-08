@@ -10,6 +10,22 @@ class Tsl2561(TSL2561):
 	def address(self):
 		return 0x39
 
+	@property
+	def lux(self):
+		self.gain = 0
+		lux = super().lux
+
+		# If no lux value available try with higher gain
+		if lux is None:
+			self.gain = 1
+			lux = super().lux
+
+		# If still no lux value return 0 and reset gain
+		if lux is None:
+			self.gain = 0
+			return 0
+		return lux
+
 	def __str__(self):
 		ret = "Illuminance: " + str(self.lux) + " lx"
 		return ret
