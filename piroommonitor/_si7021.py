@@ -12,7 +12,7 @@ class Si7021(SI7021):
 
 	def __str__(self):
 		ret = "Temperature: " + str(self.temperature) + " C\n"
-		ret = "Humidity: " + str(self.relative_humidity) + " %"
+		ret += "Humidity: " + str(self.relative_humidity) + " %"
 		return ret
 
 if __name__ == "__main__":
