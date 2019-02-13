@@ -1,12 +1,12 @@
 from functools import reduce
 
-from .sensors import Bmp180, Si7021, Tsl2561
+from .sensors import Bmp180, Si7021, Tsl2561, get_online_i2c_devices
 
 class I2CSensors(object):
 	supported_sensors = [Bmp180, Si7021, Tsl2561]
 
 	def __init__(self):
-		self.__sensors = [sensor() for sensor in I2CSensors.supported_sensors]
+		self.__sensors = [sensor() for sensor in I2CSensors.supported_sensors if sensor.address in get_online_i2c_devices()]
 
 	@property
 	def text(self):

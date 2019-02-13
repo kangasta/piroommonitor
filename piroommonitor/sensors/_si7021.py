@@ -3,12 +3,10 @@ from adafruit_si7021 import SI7021
 from ._i2c_utils import get_busio_i2c
 
 class Si7021(SI7021):
+	address = 0x40
+
 	def __init__(self):
 		super().__init__(get_busio_i2c())
-
-	@property
-	def address(self):
-		return 0x40
 
 	@property
 	def data(self):
