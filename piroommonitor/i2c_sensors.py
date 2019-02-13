@@ -1,53 +1,52 @@
-from ._bmp180 import Bmp180
-from ._si7021 import Si7021
-from ._tsl2561 import Tsl2561
+from functools import reduce
+
+from .sensors import Bmp180, Si7021, Tsl2561
 
 class I2CSensors(object):
+	supported_sensors = [Bmp180, Si7021, Tsl2561]
+
 	def __init__(self):
-		self.sensors = [Bmp180(), Si7021(), Tsl2561()]
+		self.__sensors = [sensor() for sensor in I2CSensors.supported_sensors]
 
 	@property
 	def text(self):
 		data = ""
-		for sensor in self.sensors:
+		for sensor in self.__sensors:
 			data += str(sensor) + "\n"
 		return data[:-1]
 
 	@property
 	def topic(self):
+		fields = list(set(reduce(
+			(lambda a,b: a + b),
+			(list(sensor.units.keys()) for sensor in self.__sensors)
+		)))
+
+		units_d = reduce(
+			(lambda a,b: {**a, **b}),
+			(sensor.units for sensor in self.__sensors)
+		)
+
+		units = [{"field": key, "unit": units_d[key]} for key in units_d]
+		summary = [{"field": key, "method": "latest"} for key in units_d]
+		visualization = [{"field": key, "method": "line"} for key in units_d]
+
 		return {
 			"name": "Pi Room Monitor",
 			"type_str": "piroommonitor",
 			"description": "Raspberry Pi pushing indoor weather data.",
-			"fields": ["temperature", "humidity", "pressure", "luminosity"],
-			"units": [
-				{"field": "temperature", "unit": "celsius"},
-				{"field": "humidity", "unit": "percent"},
-				{"field": "pressure", "unit": "pascal"},
-				{"field": "luminosity", "unit": "lux"}
-			],
-			"summary": [
-				{"field":"temperature", "method":"latest"},
-				{"field":"humidity", "method":"latest"},
-				{"field":"pressure", "method":"latest"},
-				{"field":"luminosity", "method":"latest"}
-			],
-			"visualization": [
-				{"field":"temperature", "method":"line"},
-				{"field":"humidity", "method":"line"},
-				{"field":"pressure", "method":"line"},
-				{"field":"luminosity", "method":"line"}
-			]
+			"fields": fields,
+			"units": units,
+			"summary": summary,
+			"visualization": visualization
 		}
 
 	@property
 	def data(self):
-		return {
-			"temperature": self.sensors[1].temperature,
-			"humidity": self.sensors[1].relative_humidity,
-			"pressure": self.sensors[0].pressure,
-			"luminosity": self.sensors[2].lux,
-		}
+		return reduce(
+			(lambda a,b: {**a, **b}),
+			(sensor.data for sensor in self.__sensors)
+		)
 
 if __name__ == "__main__":
 	sensors = I2CSensors()

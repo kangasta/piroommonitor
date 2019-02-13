@@ -10,6 +10,20 @@ class Si7021(SI7021):
 	def address(self):
 		return 0x40
 
+	@property
+	def data(self):
+		return {
+			"temperature": self.temperature,
+			"humidity": self.relative_humidity
+		}
+
+	@property
+	def units(self):
+		return {
+			"temperature": "celsius",
+			"humidity": "percent"
+		}
+
 	def __str__(self):
 		ret = "Temperature: " + str(self.temperature) + " C\n"
 		ret += "Humidity: " + str(self.relative_humidity) + " %"

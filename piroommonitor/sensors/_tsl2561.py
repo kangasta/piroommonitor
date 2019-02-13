@@ -26,6 +26,18 @@ class Tsl2561(TSL2561):
 			return 0
 		return lux
 
+	@property
+	def data(self):
+		return {
+			"luminosity": self.lux
+		}
+
+	@property
+	def units(self):
+		return {
+			"luminosity": "lux"
+		}
+
 	def __str__(self):
 		ret = "Illuminance: " + str(self.lux) + " lx"
 		return ret
