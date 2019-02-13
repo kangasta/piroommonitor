@@ -1,4 +1,8 @@
-import RPi.GPIO as GPIO
+try:
+	import RPi.GPIO as GPIO
+except RuntimeError:
+	# Let's assume we are here because of we are running unittests on non-supported host.
+	pass
 
 class MotionSensor(object):
 	def __init__(self, pir_pin):
