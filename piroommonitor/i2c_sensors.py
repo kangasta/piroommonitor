@@ -8,6 +8,9 @@ class I2CSensors(object):
 	def __init__(self):
 		self.__sensors = [sensor() for sensor in I2CSensors.supported_sensors if sensor.address in get_online_i2c_devices()]
 
+		if len(self.__sensors) == 0:
+			raise RuntimeError("No online supported sensors found")
+
 	@property
 	def text(self):
 		data = ""
