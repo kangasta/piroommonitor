@@ -18,6 +18,7 @@ setuptools.setup(
 	install_requires=[
 		"Adafruit-Blinka",
 		"adafruit-bmp",
+		"adafruit-circuitpython-bme680",
 		"adafruit-circuitpython-si7021",
 		"adafruit-circuitpython-tsl2561",
 		"fdbk>=0.8.3",

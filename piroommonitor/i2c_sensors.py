@@ -1,9 +1,9 @@
 from functools import reduce
 
-from .sensors import Bmp180, Si7021, Tsl2561, get_online_i2c_devices
+from .sensors import Bme680, Bmp180, Si7021, Tsl2561, get_online_i2c_devices
 
 class I2CSensors(object):
-	supported_sensors = [Bmp180, Si7021, Tsl2561]
+	supported_sensors = [Bmp180, Si7021, Tsl2561, Bme680]
 
 	def __init__(self):
 		self.__sensors = [sensor() for sensor in I2CSensors.supported_sensors if sensor.address in get_online_i2c_devices()]
