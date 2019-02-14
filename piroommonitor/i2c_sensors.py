@@ -6,7 +6,14 @@ class I2CSensors(object):
 	supported_sensors = [Bmp180, Si7021, Tsl2561, Bme680]
 
 	def __init__(self):
-		self.__sensors = [sensor() for sensor in I2CSensors.supported_sensors if sensor.address in get_online_i2c_devices()]
+		detected_sensors = [sensor for sensor in I2CSensors.supported_sensors if sensor.address in get_online_i2c_devices()]
+
+		self.__sensors = []
+		for sensor in detected_sensors:
+			try:
+				self.__sensors.append(sensor())
+			except:
+				pass
 
 		if len(self.__sensors) == 0:
 			raise RuntimeError("No online supported sensors found")
