@@ -40,7 +40,10 @@ class MotionSensor(object):
 
 		def __edge_callback(pin):
 			data = self.data
-			self.__reporter.push(data)
+			try:
+				self.__reporter.push(data)
+			except:
+				pass # TODO Add logging or callback or something here
 			if data["motion"] and rising_cb is not None:
 				rising_cb()
 			elif falling_cb is not None:
