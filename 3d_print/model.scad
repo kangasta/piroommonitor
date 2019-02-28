@@ -5,6 +5,9 @@ pizero_hole_r = 2.25/2;
 pi_header_width = 51;
 pi_header_length = 5;
 
+hdmi_mini_width = 12;
+usb_micro_width = 8;
+
 a = 80;
 b = 35;
 border_radius = 2.5;
@@ -22,7 +25,7 @@ module corner(height=15, holes=true, hole_only=false) {
     }
     if(hole_only) {
         if (holes) {
-            inner(r=1.75);
+            inner(r=1.5);
         }
     } else {
         cylinder(h=height, r=border_radius, $fn=16);
@@ -41,6 +44,12 @@ module corners(holes=true, holes_only=false) {
 }
 
 module pizero_connectors() {
+    /* for(i=[[hdmi_mini_width, 12.4],[usb_micro_width, 41.4],[usb_micro_width, 54]]) {
+        translate([-pizero_width/2+i[1],-(b/2)-wall_thickness,pizero_height/2+wall_thickness]) {
+            cube([i[0],wall_thickness*2, pizero_height], center=true);
+        }
+    }
+    */
     translate([0,-(b/2)-wall_thickness,pizero_height/2+wall_thickness]) {
         cube([pizero_width,wall_thickness*2, pizero_height], center=true);
     }
@@ -67,9 +76,15 @@ module pizero_header_clearance() {
 }
 
 module ventilation() {
-    for(i=[0, 8, 16, 24, 32]) {
+    for(i=[0, 7, 14, 21, 28, 35]) {
+        r = 1.5;
+        for(j=[-1,1]) {
+            translate([-i,j*(b-5-r)/2]) {
+                cylinder(h=10, r=r, $fn=12, center=true);
+            }
+        }
         translate([-i,0]) {
-            cube([3, b-5, 10], center=true);
+            cube([r*2, b-5-r, 10], center=true);
         }
     }
 }
@@ -104,7 +119,7 @@ module case(height=15, holes=true) {
 if (part == "base") {
     difference() {
         union() {
-            case(height=8, holes=false);
+            case(height=7, holes=false);
             pizero_holder();
         }
         pizero_connectors();
@@ -117,7 +132,7 @@ if (part == "base") {
     pir_r = 23.5;
     difference() {
         union() {
-            case(height=12, holes=true);
+            case(height=28, holes=true);
             for (i=[[(led_r + 1)/2, 35-led_r/2, -b/2+2+led_r/2], [(led_r + 1)/2, 35-pir_r+led_r/2, -b/2+2+led_r/2]]) {
                 translate([i[1], i[2]]) {
                     cylinder(h=5, r=i[0], $fn=24);
