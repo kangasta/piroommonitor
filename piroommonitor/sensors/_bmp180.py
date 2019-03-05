@@ -11,7 +11,7 @@ class Bmp180(BMP085):
 
 	@property
 	def pressure(self):
-		return self.read_pressure()
+		return self.read_pressure() / 100
 
 	@property
 	def data(self):
@@ -24,12 +24,12 @@ class Bmp180(BMP085):
 	def units(self):
 		return {
 			"temperature": "celsius",
-			"pressure": "pascal"
+			"pressure": "hectopascal"
 		}
 
 	def __str__(self):
 		ret  = "Temperature: " + str(round(self.temperature, 2)) + u" \u00B0C\n"
-		ret += "Pressure: " + str(round(self.pressure, 2)) + " Pa"
+		ret += "Pressure: " + str(round(self.pressure, 2)) + " hPa"
 		return ret
 
 if __name__ == "__main__":
