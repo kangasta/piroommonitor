@@ -64,8 +64,6 @@ reporter = Reporter(
 	args.db_connection,
 	args.db_parameters,
 	topic_id=saved_config['topic_id'],
-	interval=args.interval,
-	num_samples=args.num_samples,
 	verbose=args.verbose
 )
 
@@ -95,7 +93,10 @@ def led_red():
 if args.motion_sensor_pin is not None:
 	motion_sensor.start(motion_reporter, led_red, led_green)
 
-reporter.start()
+reporter.start(
+	interval=args.interval,
+	num_samples=args.num_samples
+)
 
 if __leds:
 	for led in __leds:
