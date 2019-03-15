@@ -27,6 +27,7 @@ parser.add_argument("--led-pins", "-l", action="append", default=[], type=int, n
 parser.add_argument("--motion-sensor-pin", "-m", type=int, help="Pin number for motion sensor out")
 parser.add_argument("--led-brightness", "-b", type=float, default=0.5, choices=FRange(0,1), help="Led brigthness multiplier")
 parser.add_argument("--verbose", "-v", action="store_true", help="Be more verbose.")
+parser.add_argument("--compensate", "-c", action="append", default=[], type=str, nargs=2, metavar=("field","value"), help="Linear measurement compensation")
 args = parser.parse_args()
 
 __leds = [RGBLed(*pins, args.led_brightness) for pins in args.led_pins]
@@ -58,7 +59,7 @@ if args.motion_sensor_pin is not None:
 else:
 	motion_reporter = None
 
-sensors = I2CSensors()
+sensors = I2CSensors(args.compensate)
 reporter = Reporter(
 	sensors,
 	args.db_connection,

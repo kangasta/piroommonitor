@@ -5,9 +5,10 @@ from .sensors import Bme680, Bmp180, Si7021, Tsl2561, get_online_i2c_devices
 class I2CSensors(object):
 	supported_sensors = [Bmp180, Si7021, Tsl2561, Bme680]
 
-	def __init__(self):
+	def __init__(self, compensate=[]):
 		detected_sensors = [sensor for sensor in I2CSensors.supported_sensors if sensor.address in get_online_i2c_devices()]
 
+		self.__compensate = compensate
 		self.__sensors = []
 		for sensor in detected_sensors:
 			try:
@@ -53,10 +54,18 @@ class I2CSensors(object):
 
 	@property
 	def data(self):
-		return reduce(
+		combined = reduce(
 			(lambda a,b: {**a, **b}),
 			(sensor.data for sensor in self.__sensors)
 		)
+
+		for field, value in self.__compensate:
+			try:
+				combined[field] += float(value)
+			except Exception:
+				pass
+
+		return combined
 
 if __name__ == "__main__":
 	sensors = I2CSensors()
