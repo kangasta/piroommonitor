@@ -14,7 +14,7 @@ class Bme680(Adafruit_BME680_I2C):
 			"temperature": self.temperature,
 			"humidity": self.humidity,
 			"pressure": self.pressure,
-			"air_quality_resistance": self.gas
+			"air_quality_resistance": self.gas / 1000
 		}
 
 	@property
@@ -23,12 +23,12 @@ class Bme680(Adafruit_BME680_I2C):
 			"temperature": "celsius",
 			"humidity": "percent",
 			"pressure": "hectopascal",
-			"air_quality_resistance": "ohm"
+			"air_quality_resistance": "kiloohm"
 		}
 
 	def __str__(self):
 		ret = "Temperature:" + str(self.temperature) + " °C\n"
 		ret += "Humidity: " + str(self.humidity) + " %\n"
 		ret += "Pressure: " + str(self.pressure) + " hPa\n"
-		ret += "Gas: " + str(self.gas) + " Ω"
+		ret += "Gas: " + str(self.gas) + " kΩ"
 		return ret
