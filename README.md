@@ -5,10 +5,19 @@ Python script to push data from Raspberry Pi to fdbk backend.
 ## Installing
 
 First, ensure that you have pigpiod installed. Then, run:
-```
+
+```bash
 sudo pigpiod
 sudo python3 setup.py install
 ```
+
+If you see an error about conflicting version for requests package, remove the earlier installation with
+
+```bash
+sudo apt-get remove python3-requests
+```
+
+before installing the package.
 
 ## Usage
 
@@ -46,8 +55,6 @@ python3 -m unittest discover -s piroommonitor/tst/
 
 Get test coverage with commands:
 ```bash
-cd pi_si7021
-
 coverage run -m unittest discover -s piroommonitor/tst/
 coverage report -m
 ```
