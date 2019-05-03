@@ -19,4 +19,8 @@ class Tcs34725(TCS34725):
 
 	@property
 	def units(self):
-		return {}
+		return {
+			"color_r": None,
+			"color_g": None,
+			"color_b": None
+		}
