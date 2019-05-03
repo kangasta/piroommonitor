@@ -22,7 +22,7 @@ setuptools.setup(
 		"adafruit-circuitpython-si7021",
 		"adafruit-circuitpython-tcs34725",
 		"adafruit-circuitpython-tsl2561",
-		"fdbk>=1.0.1",
+		"fdbk>=1.0.3",
 		"pigpio",
 		"RPi.GPIO"
 	],
