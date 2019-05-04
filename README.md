@@ -45,6 +45,12 @@ To automatically start fdbk (without persistent data storage) and piroommonitor 
 @reboot /usr/bin/docker run -dp 8080:8080 fdbk && /usr/local/bin/piroommonitor http://localhost:8080 -v -l 19 20 21 -l 22 23 24 -b 0.05 -m 4 --new-topic-id
 ```
 
+### Adding support for new I2C sensors
+
+To add support for additional I2C sensors, create a wrapper for the library provided by the sensor vendor under `piroommonitor/sensors/`, import the wrapper in [`sensors/__init__.py`](./piroommonitor/sensors/__init__.py), and add the sensor to supported sensors list in [`piroommonitor/i2c_sensors.py`](./piroommonitor/i2c_sensors.py).
+
+The wrapper should provide three properties: address, data and units. The address property should be an integer value of the I2C address, the data property should be a dict of measurements provided by the sensor, and the units property should be a dict of measurement values and corresponding units. The two dicts should share the same set of keys. For unitless masurement fields, use `None` as the unit value. See the current set of wrappers for an example.
+
 ## Testing
 
 Run unit tests with commands:
